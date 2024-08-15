@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Image Redirect (written by chatgpt)</title>
+</head>
+<body>
+    <script>
+        // Function to get the value of a query parameter by name
+        function getQueryParameterByName(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Get the base64 image string from the "image" query parameter
+        const base64Image = getQueryParameterByName('image');
+
+        // If there's a base64 image, redirect to the image data URL
+        if (base64Image) {
+            const imageUrl = `data:image/png;base64,${base64Image}`;
+            window.location.href = imageUrl;
+        } else {
+            document.body.innerHTML = '<p>No image provided in the query parameters.</p>';
+        }
+    </script>
+</body>
+</html>
