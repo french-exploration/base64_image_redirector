@@ -6,6 +6,7 @@
     <title>Base64 Image Redirect (written by chatgpt)</title>
 </head>
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
     <script>
         // Function to get the value of a query parameter by name
         function getQueryParameterByName(name) {
@@ -13,8 +14,36 @@
             return urlParams.get(name);
         }
 
+        function unzipBase64(base64Data) {
+            try {
+                // Decode the base64 string
+                const binaryString = atob(base64Data);
+                const binaryData = new Uint8Array(binaryString.length);
+
+                for (let i = 0; i < binaryString.length; i++) {
+                    binaryData[i] = binaryString.charCodeAt(i);
+                }
+
+                // Unzip the data
+                const unzippedData = pako.inflate(binaryData);
+                // Convert the unzipped data back to a string
+                const unzippedString = btoa(String.fromCharCode.apply(null, unzippedData));
+
+                return unzippedString;
+            } catch (e) {
+                console.error('Error unzipping the base64 data:', e);
+                return null;
+            }
+        }
+        
         // Get the base64 image string from the "image" query parameter
         const base64Image = getQueryParameterByName('image');
+        const zipped = getQueryParameterByName('zipped');
+
+        if (zipped === "true")
+        {
+            base64Image = unzipBase64(zippedBase64Image);
+        }
 
         // If there's a base64 image, redirect to the image data URL
         if (base64Image) {
